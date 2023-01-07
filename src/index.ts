@@ -1,13 +1,7 @@
-import axios from 'axios';
-import config from './appconfig';
-import { store } from '~/src/store';
-import { authActions } from '~/src/store/auth';
-import { ApiRoutes } from '~/generated';
-
 class api {
     baseUrl: string;
 
-    constructor() {
+    constructor(ApiRoutes) {
         Object.keys(ApiRoutes || {}).forEach((key) => {
             const routeData = ApiRoutes[key];
             this[key] = (
@@ -90,7 +84,7 @@ class api {
             };
             if (method == 'GET') options.params = data;
             else options.data = data;
-            axios(options)
+            fetch(options)
                 .then((response) => {
                     resolve(response);
                 })
@@ -101,18 +95,31 @@ class api {
     };
 }
 
-type ApiRoutesInterface = {
-    [key in keyof typeof ApiRoutes]: ({
+interface ApiRouteDefaultProps {
+    [key: string]: {
+        method: string;
+        url: string;
+        params?: any;
+        query?: any;
+        body?: any;
+        response: any;
+    };
+}
+
+type ApiRoutesInterface<T extends ApiRouteDefaultProps> = {
+    [key in keyof T]: ({
         params = undefined,
         query = undefined,
         body = undefined,
-    }: Omit<typeof ApiRoutes[key], 'response' | 'method' | 'url'>) => Promise<typeof ApiRoutes[key]['response']>;
+    }: Omit<T[key], 'response' | 'method' | 'url'>) => Promise<T[key]['response']>;
 };
-type ApiInstance = api & ApiRoutesInterface;
+type ApiInstance<T extends ApiRouteDefaultProps> = api & ApiRoutesInterface<T>;
 
-interface ApiClientOptions {}
+interface ApiClientOptions {
+    ApiRoutes: any;
+}
 
-const defineApiClient = (options: ApiClientOptions): ApiInstance => {
-    return new api() as ApiInstance;
+export const defineApiClient = <T extends ApiRouteDefaultProps>(options: ApiClientOptions): ApiInstance<T> => {
+    const ApiRoutes = options.ApiRoutes || {};
+    return new api(ApiRoutes) as ApiInstance<T>;
 };
-export default defineApiClient;
