@@ -80,7 +80,7 @@ class api {
     };
 }
 const defineApiClient = (options) => {
-    const ApiRoutes = options.ApiRoutes || {};
+    const ApiRoutes = options.routesDef || {};
     return new api(ApiRoutes);
 };
 
