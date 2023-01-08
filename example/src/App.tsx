@@ -4,9 +4,16 @@ import api from './api';
 
 const App: Component = () => {
     onMount(() => {
-        api.user({}).then((data) => {
-            data.role == 'admin';
-        });
+        api.user({})
+            .then((data) => {
+                console.log({ data });
+                if (data.logged) {
+                    data.user.role == 'moderator';
+                }
+            })
+            .catch((error) => {
+                console.log('ERR', error);
+            });
     });
 
     return (

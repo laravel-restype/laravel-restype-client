@@ -3,5 +3,5 @@ import { ApiRoutes } from '../generated';
 
 export default defineApiClient<typeof ApiRoutes>({
     routesDef: ApiRoutes,
-    baseUrl: 'http://localhost:8044',
+    baseUrl: 'http://localhost:8044/api',
 });
