@@ -26,8 +26,6 @@ export const fetchDriver = <R>(): ApiDriver<R> => {
                 fetchOptions.credentials = 'include';
             }
 
-            console.log('fetchoptions', fetchOptions);
-            console.log('options', options);
             fetch(url, {
                 ...fetchOptions,
                 ...(options?.extraOptions?.fetchOptions || {}),
@@ -36,11 +34,7 @@ export const fetchDriver = <R>(): ApiDriver<R> => {
                     rawResponse
                         .json()
                         .then((response) => {
-                            // if (response.error) {
-                            //     reject(response.error);
-                            // } else {
                             resolve(response as R);
-                            // }
                         })
                         .catch((error) => reject(error));
                 })
