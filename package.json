@@ -2,17 +2,17 @@
     "name": "laravel-restype-client",
     "version": "0.1.0",
     "description": "Api client that implements typescript api definitions that are automatically generated via laravel-restype plugin.",
-    "main": "dist/esm/index.js",
-    "module": "dist/esm/index.js",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
         "dist"
     ],
     "exports": {
         ".": {
-            "import": "./dist/esm/index.js",
-            "browser": "./dist/esm/index.js",
-            "default": "./dist/esm/index.js"
+            "import": "./dist/index.js",
+            "browser": "./dist/index.js",
+            "default": "./dist/index.js"
         }
     },
     "sideEffects": false,
