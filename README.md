@@ -74,6 +74,10 @@ api.helloWorld({})
 
 # Changelog:
 
+### v0.1.1 - 2023-05-01
+
+-   Added support for route params
+
 ### v0.1 - 2023-01-07
 
 -   First version

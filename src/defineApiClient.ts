@@ -16,17 +16,23 @@ class api<T extends ApiRouteDefaultProps> {
                     query = undefined,
                     body = undefined,
                 }: {
-                    params: typeof routeData['params'];
-                    query: typeof routeData['query'];
-                    body: typeof routeData['body'];
+                    params: (typeof routeData)['params'];
+                    query: (typeof routeData)['query'];
+                    body: (typeof routeData)['body'];
                 },
                 extraOptions: any = {},
-            ): Promise<typeof routeData['response']> => {
+            ): Promise<(typeof routeData)['response']> => {
                 return new Promise((resolve, reject) => {
-                    // TODO: replace params in url
+                    if (params) {
+                        Object.keys(params).forEach((key) => {
+                            routeData.url = routeData.url
+                                .replace(`{${key}}`, params[key] || '')
+                                .replace(`{${key}?}`, params[key] || '');
+                        });
+                    }
                     this.request(routeData.method, routeData.url, { query, body, extraOptions })
                         .then((response: any) => {
-                            resolve(response as typeof routeData['response']);
+                            resolve(response as (typeof routeData)['response']);
                         })
                         .catch((error: any) => {
                             reject(error);
@@ -99,6 +105,7 @@ class api<T extends ApiRouteDefaultProps> {
                 method: method,
                 url: url,
                 headers: headers,
+                params: data.params || undefined,
                 query: data.query || undefined,
                 body: data.body || undefined,
                 extraOptions: data.extraOptions || undefined,
