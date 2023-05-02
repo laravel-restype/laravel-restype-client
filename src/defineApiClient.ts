@@ -23,14 +23,7 @@ class api<T extends ApiRouteDefaultProps> {
                 extraOptions: any = {},
             ): Promise<(typeof routeData)['response']> => {
                 return new Promise((resolve, reject) => {
-                    if (params) {
-                        Object.keys(params).forEach((key) => {
-                            routeData.url = routeData.url
-                                .replace(`{${key}}`, params[key] || '')
-                                .replace(`{${key}?}`, params[key] || '');
-                        });
-                    }
-                    this.request(routeData.method, routeData.url, { query, body, extraOptions })
+                    this.request(routeData.method, routeData.url, { params, query, body, extraOptions })
                         .then((response: any) => {
                             resolve(response as (typeof routeData)['response']);
                         })
@@ -67,10 +60,12 @@ class api<T extends ApiRouteDefaultProps> {
         method,
         url,
         {
+            params = undefined,
             query = undefined,
             body = undefined,
             extraOptions = {},
         }: {
+            params?: { [key: string]: string | number };
             query?: { [key: string]: string | number };
             body?: any;
             extraOptions?: any;
@@ -79,6 +74,11 @@ class api<T extends ApiRouteDefaultProps> {
         return new Promise((resolve, reject) => {
             method = method.toUpperCase();
             url = this.baseUrl + url;
+            if (params) {
+                Object.keys(params).forEach((key) => {
+                    url = url.replace(`{${key}}`, params[key] || '').replace(`{${key}?}`, params[key] || '');
+                });
+            }
             let headers = {};
             // TODO: iterate on data to find a file param, then convert the entire object to formdata
             headers['Content-Type'] = body instanceof FormData ? 'multipart/form-data' : 'application/json';
